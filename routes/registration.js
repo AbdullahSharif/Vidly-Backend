@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const bcrypt = require('bcrypt');
 const express = require("express");
 const router = express.Router();
 const { User, validateUser } = require("../Models/User");
@@ -15,7 +16,13 @@ router.post("/", async (req, res) => {
 
     // create a new user.
     newUser = new User(_.pick(req.body, ["userName", "email", "password", "phone"]));
+    // generate salt.
+    const salt = await bcrypt.genSalt(10);
+    // now set the user password to the hased password.
+    newUser.password = await bcrypt.hash(newUser.password, salt);
 
+
+    // now save the user in the database.
     try {
         await newUser.save();
         return res.status(200).send(_.pick(newUser, ["userName", "email", "phone"]));

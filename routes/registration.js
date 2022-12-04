@@ -5,11 +5,15 @@ const { User, validateUser } = require("../Models/User");
 router.post("/", async (req, res) => {
 
     // validate the user object.
-    const validationResult = validateUser(req.body);
-    if (!validationResult) return res.status(400).send("Validation failed!");
+    const { error } = validateUser(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    // check whether the user exists in the database.
+    let newUser = await User.findOne({ email: req.body.email });
+    if (newUser) return res.status(400).send("User already registered");
 
     // create a new user.
-    const newUser = new User(req.body);
+    newUser = new User(req.body);
 
     try {
         const result = await newUser.save();

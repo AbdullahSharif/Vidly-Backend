@@ -36,11 +36,8 @@ function validateUser(obj) {
         phone: Joi.string().required().min(11).max(11),
         email: Joi.string().email().required()
     });
-    const { error } = schema.validate(obj)
+    return schema.validate(obj);
 
-    if (error) return false;
-
-    return true;
 
 }
 

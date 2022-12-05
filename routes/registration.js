@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
     // now save the user in the database.
     try {
         await newUser.save();
-        return res.status(200).send(_.pick(newUser, ["userName", "email", "phone"]));
+        return res.status(200).header("x-auth-token", newUser.generateAuthToken()).send(_.pick(newUser, ["userName", "email", "phone"]));
     } catch (exc) {
         return res.status(400).send(exc);
     }

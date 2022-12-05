@@ -1,5 +1,3 @@
-const config = require("config");
-const jwt = require("jsonwebtoken");
 const express = require("express");
 const Joi = require("joi");
 const router = express.Router();
@@ -32,8 +30,8 @@ router.post("/", async (req, res) => {
     if (!passwordValidation) return res.status(400).send("Invalid email or password!");
 
     // if the user exists in the database, we sign a token and return it to the user.
-    const token = jwt.sign({ _id: user._id }, config.get("jwtPrivateKey"));
-    return res.status(200).send(token);
+    const token = user.generateAuthToken();
+    return res.status(200).header("x-auth-token", token).send(token);
 
 
 })

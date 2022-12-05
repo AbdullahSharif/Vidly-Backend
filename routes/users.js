@@ -16,13 +16,15 @@ router.post("/", async (req, res) => {
     // validate the user object.
     const { error } = validateUser(_.pick(req.body, ["userName", "password", "phone", "email"]));
     if (error) return res.status(400).send(error.details[0].message);
+    // if (error) return res.status(400).send("Error is here!");
+
 
     // check whether the user exists in the database.
     let newUser = await User.findOne({ email: req.body.email });
     if (newUser) return res.status(400).send("User already registered");
 
     // create a new user.
-    newUser = new User(_.pick(req.body, ["userName", "email", "password", "phone"]));
+    newUser = new User(_.pick(req.body, ["userName", "email", "password", "phone", "isAdmin"]));
     // generate salt.
     const salt = await bcrypt.genSalt(10);
     // now set the user password to the hased password.

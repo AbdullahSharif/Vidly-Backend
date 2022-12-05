@@ -1,4 +1,5 @@
 const auth = require("../middlewares/auth");
+const admin = require("../middlewares/admin");
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
@@ -89,7 +90,7 @@ router.put("/:name", async (req, res) => {
 
 // delete api.
 
-router.delete("/:name", async (req, res) => {
+router.delete("/:name", [auth, admin], async (req, res) => {
     // check if the genre exists.
     const foundObject = await Genre.findOne({ name: req.params.name });
     if (!foundObject) return res.status(404).send("Genre Not Found!");

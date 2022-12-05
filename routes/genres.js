@@ -1,6 +1,8 @@
+const auth = require("../middlewares/auth");
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
+const _ = require("lodash");
 const { Genre } = require('../Models/Genre');
 
 // genres array
@@ -26,7 +28,7 @@ router.get("/:name", async (req, res) => {
 })
 
 // post api.
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
     // validation
     const schema = Joi.object({
         name: Joi.string().min(3).required()
@@ -42,7 +44,7 @@ router.post("/", async (req, res) => {
     // })
 
     // now create a mongoDB document
-    const newGenre = new Genre(req.body);
+    const newGenre = new Genre(_.pick(req.body, ["name"]));
     try {
         const result = await newGenre.save();
         return res.send(result);

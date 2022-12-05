@@ -3,6 +3,13 @@ const bcrypt = require('bcrypt');
 const express = require("express");
 const router = express.Router();
 const { User, validateUser } = require("../Models/User");
+const auth = require('../middlewares/auth');
+
+router.get("/me", auth, async (req, res) => {
+    // look below. we are getting the id from the payload present in the jwt.
+    const userDetails = await User.findOne({ _id: req.user._id }).select("-password");
+    return res.status(200).send(userDetails);
+})
 
 router.post("/", async (req, res) => {
 

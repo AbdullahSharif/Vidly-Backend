@@ -9,6 +9,7 @@ module.exports = function (req, res, next) {
         const decodedPayload = jwt.verify(authToken, config.get("jwtPrivateKey"));
         // req.body._id = decodedPayload._id;
         // req.body = decodedPayload;
+        req.user = decodedPayload;
         next();
     } catch (exc) {
         res.send(401).send("Token not valid!");

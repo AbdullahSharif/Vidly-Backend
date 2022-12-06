@@ -14,10 +14,15 @@ const { Genre } = require('../Models/Genre');
 
 // ];
 // get api
-router.get("/", async (req, res) => {
-    // get all the genres from the database
-    const result = await Genre.find();
-    res.status(200).send(result);
+router.get("/", async (req, res, next) => {
+    try {
+        // get all the genres from the database
+        const result = await Genre.find();
+        res.status(200).send(result);
+    } catch (exc) {
+        next(exc);
+    }
+
 })
 
 // get api for a specific name.

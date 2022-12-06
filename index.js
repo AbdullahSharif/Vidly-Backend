@@ -1,3 +1,4 @@
+const error = require("./middlewares/error");
 const config = require("config");
 const express = require('express');
 const genres = require('./routes/genres');
@@ -24,6 +25,9 @@ app.use("/api/movies", movies);
 app.use("/api/rentals", rentals);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
+
+// use the error handling error middleware at last.
+app.use(error);
 
 
 

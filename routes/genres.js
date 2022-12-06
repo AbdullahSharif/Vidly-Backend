@@ -1,3 +1,4 @@
+const asyncMiddleware = require("../middlewares/async");
 const auth = require("../middlewares/auth");
 const admin = require("../middlewares/admin");
 const express = require('express');
@@ -14,16 +15,21 @@ const { Genre } = require('../Models/Genre');
 
 // ];
 // get api
-router.get("/", async (req, res, next) => {
-    try {
-        // get all the genres from the database
-        const result = await Genre.find();
-        res.status(200).send(result);
-    } catch (exc) {
-        next(exc);
-    }
-
-})
+// we need to have the try cacth block at one single place.
+// so
+// function asyncMiddleware(handler) {
+//     return (req, res, next) => {
+//         try {
+//             handler(req, res);
+//         } catch (exc) {
+//             next(exc);
+//         }
+//     }
+// }
+router.get("/", asyncMiddleware(async (req, res) => {
+    const result = await Genre.find();
+    res.status(200).send(result);
+}));
 
 // get api for a specific name.
 router.get("/:name", async (req, res) => {

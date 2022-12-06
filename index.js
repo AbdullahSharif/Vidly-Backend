@@ -1,4 +1,6 @@
 require("express-async-errors");
+const winston = require("winston");
+require("winston-mongodb");
 const error = require("./middlewares/error");
 const config = require("config");
 const express = require('express');
@@ -17,6 +19,10 @@ if (!config.get("jwtPrivateKey")) {
     console.error("Jwt token not set in the runtime environment.")
     process.exit(1);
 }
+
+winston.add(new winston.transports.MongoDB({
+    db: "mongodb://localhost/Vidly"
+}));
 
 const app = express();
 app.use(express.json());        // use a middleware to handle json in the request body.

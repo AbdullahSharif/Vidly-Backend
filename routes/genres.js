@@ -26,10 +26,11 @@ const { Genre } = require('../Models/Genre');
 //         }
 //     }
 // }
-router.get("/", asyncMiddleware(async (req, res) => {
+router.get("/", async (req, res) => {
+    // throw new Error("Generated error!");
     const result = await Genre.find();
     res.status(200).send(result);
-}));
+});
 
 // get api for a specific name.
 router.get("/:name", async (req, res) => {
